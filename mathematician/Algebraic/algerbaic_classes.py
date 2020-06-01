@@ -105,7 +105,7 @@ class Xn():
     >>> power_obj = Xn(var= "x", power= Add(["n"]))
     >>> str(power_obj)
     'x^{n}'
-    >>> str(power_obj.derivative())
+    >>> str(power_obj.differentiate())
     '(n) * x^{n - 1}'
     """
 
@@ -116,11 +116,11 @@ class Xn():
         out = "%s^{%s}"%(str(self.var), str(self.power))
         return(out)
 
-    def derivative(self):
+    def differentiate(self):
         """
         Returns an object with first order derivative
         >>> test_obj = Xn(var= "x", power=15)
-        >>> str(test_obj.derivative())
+        >>> str(test_obj.differentiate())
         '15 * x^{14}'
 
         :return: Multiply()
@@ -136,6 +136,24 @@ class Xn():
 
 
         raise Exception("Math Error: Can't differentiate the funtion")
+
+class Fraction():
+    """
+    Defines a fraction.
+    >>> numer = Add(["x", "z", "a"])
+    >>> denom = Subtraction([Add(["z", "x"]) , "a"])
+    >>> fraction  = Fraction(numerator= numer, denominator= denom)
+    >>> str(fraction)
+    '\\frac{x + z + a}{z + x - a}'
+
+    """
+
+
+    def __init__(self, numerator, denominator):
+        self.num, self.deno = numerator, denominator
+
+    def __str__(self):
+        return str(r'\frac{%s}{%s}'%(str(self.num), str(self.deno)))
 
 
 
