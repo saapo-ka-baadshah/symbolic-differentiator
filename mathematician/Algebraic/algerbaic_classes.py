@@ -1,4 +1,3 @@
-import re
 """
 This is a Set of classes defining Algebraic Methods:
 Add(  array    ):            defines addition of arrayed entities
@@ -8,19 +7,6 @@ Divide(   array   ):         defines division of arrayed entities
 Xn(     var = x,    n):      defines variable to the power n entity
 
 """
-
-def findIntInAString(string_in):
-    """
-    Self-explanatory
-
-    >>> findIntInAString("n + 15")
-    ['15']
-
-    :param string_in:
-    :return list_of_integers_in_the_string:
-    """
-    return re.findall(r'\d+', string_in)
-
 
 class Add():
     """
@@ -116,9 +102,11 @@ class Division():
 class Xn():
     """
     Defines a power function with radix = variable (default x) and power = power
-    >>> power_obj = Xn(var= "x", power="n")
+    >>> power_obj = Xn(var= "x", power= Add(["n"]))
     >>> str(power_obj)
     'x^{n}'
+    >>> str(power_obj.derivative())
+    '(n) * x^{n - 1}'
     """
 
     def __init__(self, power, var="x"):
@@ -131,8 +119,8 @@ class Xn():
     def derivative(self):
         """
         Returns an object with first order derivative
-        >>> power_obj = Xn(var= "x", power=15)
-        >>> str(power_obj.derivative())
+        >>> test_obj = Xn(var= "x", power=15)
+        >>> str(test_obj.derivative())
         '15 * x^{14}'
 
         :return: Multiply()
@@ -141,13 +129,10 @@ class Xn():
             coeff = self.power
             diff_power = self.power -1
             return Multiply([coeff, Xn(var= self.var , power= diff_power)])
-        elif isinstance(self.power, str):
-            # coeff = "({})".format(self.power)
-            # offset_list = findIntInAString(self.power)
-            # if len(offset_list) == 1:
-            #     offset
-            #     diff_power =
-            pass
+        else:
+            coeff = "({})".format(str(self.power))
+            diff_power = Subtraction([str(self.power) , "1"])
+            return Multiply([coeff, Xn(var= self.var , power= diff_power)])
 
 
         raise Exception("Math Error: Can't differentiate the funtion")
