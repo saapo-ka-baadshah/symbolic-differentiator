@@ -1,1 +1,21 @@
 main symbol  extractor = r"[(\+|\-)(.*?)(\+|\-)]+"
+function extractor = r"\w+\(.*?\)"
+        function name extractor = r"\w+\("          ...end index - 1
+        function value extractor = r"\(.*?\)"       ...start index + 1 and end index -1
+
+exponential extractor = r"\w+\^\(.*?\)"
+        exponent base extractor = r"\w+\^"          ...end index - 1
+        exponent value extractor = r"\(.*?\)"       ...start index + 1 and end index -1
+
+logarithmms extractor = r"(log\(.*?\)\(.*?\))|(ln\(.*?\))|(log\(.*?\))"
+    Group1:     General log
+        log_type extractor = r"\w+\("                                 ...end index - 1
+        log_base and log_value extractor = r"\(.*?\)"                 ...end match will have 2 sets, first will be base
+                                                                            and 2nd will be value
+                                                                      ...start index + 1 and end index -1 for each
+
+    Group2 and Group 3:     Natural log and Mathematical Log
+        log_type extractor = r"\w+\("                                 ...end index - 1
+        log_value extractor = r"\(.*?\)"                              ...match set index 1,
+                                                                         start index + 1 and end index -1
+
