@@ -1,5 +1,20 @@
-import re
+"""
+Performs all the Regex Operations
+getSymbolList(string):                          returns all possible symbols in the  given string
+                                                except =
 
+getFunctions(string):                           returns function positions and details
+
+getExponents(string):                           returns locations of exponents and details
+
+getLogarithms(string):                          returns locations and details of logarithms
+
+getBracketIndices(string):                      returns opening and closing scopes of all brackets
+"""
+
+
+import re
+from mathematician.Treemaker.treemaker import *
 
 def getSymbolList(inString):
     return re.findall(r"[(\+|\-)(.*?)(\+|\-)]+", inString)
@@ -10,7 +25,7 @@ def getFunctions(inString):
     >>> random_string = "g(x) = x + x**2 + f(x + x**2)"
     >>> res = getFunctions(random_string)
     >>> print(res)
-
+    ([[0, 4], [18, 29]], [['g', 'x'], ['f', 'x + x**2']])
     :param inString:
     :return list:
     """
@@ -23,8 +38,12 @@ def getFunctions(inString):
         subString = str(match.group())
         function_name = pat_function_name.findall(subString)[0][:-1]
         function_value = pat_function_value.findall(subString)[0][1:-1]
-        function_locations.append([match.start(), match.end()])
-        function_details.append([function_name, function_value])
+        if(function_name not in NON_FUNCTION_LIST):
+            function_locations.append([match.start(), match.end()])
+            function_details.append({
+                "name": function_name,
+                "variables": function_value
+            })
 
     return(function_locations, function_details)
 
@@ -80,6 +99,27 @@ def getLogarithms(inString):
 
     return (logarithms_locations, logarithms_details)
 
+def getExpressions(inString):
+    """
+    >>> inStr = "log(base)(value) - ln(value) + log(15) = f(base, value) = x = y+z"
+    >>> getExpressions(inStr)
+
+    :param inString:
+    :return (listOfTrees, status = ("duonomial_equation" or "multinomial_equation")):
+    """
+    listOfTrees = inString.split("=")
+    for tree in listOfTrees:
+        if len(tree.replace(" ", "")) == 0:
+            raise Exception("Expression Missing: There should not be any empty sides to an equal to sign.(=)")
+    if len(listOfTrees) == 2:
+        status = "duonomial_equation"
+        return(listOfTrees, status)
+
+    elif len(listOfTrees) > 2:
+        status = "multinomial_equation"
+        return(listOfTrees, status)
+    elif len(listOfTrees) < 2:
+        raise Exception("Expression Missing: Make sure you have at least a two sided equal to sign in the expression.")
 
 
 def getBracketIndices(inString):

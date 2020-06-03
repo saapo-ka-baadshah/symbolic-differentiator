@@ -1,4 +1,10 @@
 main symbol  extractor = r"[(\+|\-)(.*?)(\+|\-)]+"
+
+Expression Parser:
+        either an expression is duonomial equation or a multinomial equation
+        returns the equation sides and a status indicating whether it is a duonomial equation or a multinomial
+            equation
+
 function extractor = r"\w+\(.*?\)"
         function name extractor = r"\w+\("          ...end index - 1
         function value extractor = r"\(.*?\)"       ...start index + 1 and end index -1
